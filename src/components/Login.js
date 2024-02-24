@@ -9,7 +9,9 @@ const Login = (props) => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const navigate = useNavigate();
-
+  const onHomeClick = () => {
+    navigate('/');
+  }; 
   const onButtonClick = () => {
     setEmailError('');
     setPasswordError('');
@@ -18,7 +20,7 @@ const Login = (props) => {
       return;
     }
   
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       setEmailError('Please enter a valid email');
       return;
     }
@@ -70,6 +72,9 @@ const Login = (props) => {
       <br />
       <div className={'inputContainer'}>
         <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Log in'} />
+      </div>
+      <div className={'inputContainer'}>
+        <input className={'inputButton'} type="button" onClick={onHomeClick} value={'Back'} />
       </div>
     </div>
   );

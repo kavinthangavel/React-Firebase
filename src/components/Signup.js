@@ -13,7 +13,9 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
-
+  const onHomeClick = () => {
+    navigate('/');
+  }; 
   const onButtonClick = () => {
     setNameError('');
     setEmailError('');
@@ -29,7 +31,7 @@ const Signup = () => {
     if ('' === email) {
       setEmailError('Please enter your email');
       isValid = false;
-    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       setEmailError('Please enter a valid email');
       isValid = false;
     }
@@ -110,6 +112,9 @@ const Signup = () => {
       <br />
       <div className={'inputContainer'}>
         <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Sign up'} />
+      </div>
+      <div className={'inputContainer'}>
+        <input className={'inputButton'} type="button" onClick={onHomeClick} value={'Back'} />
       </div>
     </div>
   );
