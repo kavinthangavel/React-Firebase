@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../config/firebase';
 import './Login.css';
 
 const Login = (props) => {
@@ -10,9 +12,8 @@ const Login = (props) => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const navigate = useNavigate();
-  const onHomeClick = () => {
-    navigate('/');
-  }; 
+
+
   const onButtonClick = () => {
     setEmailError('');
     setPasswordError('');
@@ -35,7 +36,27 @@ const Login = (props) => {
       setPasswordError('The password must be 8 characters or longer');
       return;
     }
-  
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log("Login successful:", user.uid);
+        navigate('/'); 
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.error("Login error:", errorCode, errorMessage);
+        if (errorCode === 'auth/user-not-found') {
+          setEmailError('No user found with this email.');
+        } else if (errorCode === 'auth/wrong-password') {
+          setPasswordError('Incorrect password.');
+        } else {
+          setEmailError('Failed to login. Please try again.');
+        }
+      });
   };
 
   return (
@@ -73,9 +94,6 @@ const Login = (props) => {
       <br />
       <div className={'inputContainer'}>
         <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Log in'} />
-      </div>
-      <div className={'inputContainer'}>
-        <input className={'inputButton'} type="button" onClick={onHomeClick} value={'Back'} />
       </div>
     </div>
   );
