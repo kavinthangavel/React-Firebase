@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../config/firebase';
 import './Signup.css';
 
 const Signup = () => {
@@ -51,8 +53,24 @@ const Signup = () => {
     }
 
     if (isValid) {
-
-    }
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up successfully
+          const user = userCredential.user;
+          console.log('User created successfully:', user);
+          navigate('/');
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error("Signup error:", errorCode, errorMessage);
+          if (errorCode === 'auth/email-already-in-use') {
+            setEmailError('Email is already in use.');
+          } else {
+            setEmailError('Failed to sign up. Please try again.');
+          }
+        });
+      }
   };
 
   return (
